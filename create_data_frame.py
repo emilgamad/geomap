@@ -140,7 +140,8 @@ def create_filtered_polygon_dataframe(data):
     elevation = []
     time_measured = []
     status = []
-    
+
+    #print(data)
     for i in data:
         if i[2] and i[3]: 
             id.append(i[0])

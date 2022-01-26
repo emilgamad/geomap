@@ -67,11 +67,11 @@ def get_barangay_rcm(municipality=None):
 #     return rows
 
 
-def get_geo_data():
+def get_geo_data1():
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     #connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
-    cursor.execute("Select * from gpx_track_segments where gpx_id='6541-00002-01'")
+    cursor.execute("Select * from gpx_track_segments where gpx_id='2314-00771-01'")
     #cursor.execute("Select * from gpx_infos where user='2036'")
     rows = cursor.fetchall()
     
@@ -80,15 +80,16 @@ def get_geo_data():
 def get_geo_data(gpx_id):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
-    cursor.execute("Select * from gpx_track_segments where gpx_id='{}'".format(gpx_id))
+    statement = "Select * from gpx_track_segments where gpx_id = '{}'".format(gpx_id)
+    #print(statement)
+    cursor.execute(statement)
     rows = cursor.fetchall()
     return rows
 
 def get_filter_data(region, province, municipality, barangay):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
-    query_string = ("SELECT fields.field_id,fields.farmer_id,farmers.rsbsa_id,fields.field_name,fields.field_size_ha,fields.gpx_id, gpx_infos.area, gpx_infos.center_lat, gpx_infos.center_lng, tblplant.dtmPlantPlanted, tblrefcom.strCom, tblrefseedtype.strSeedType, tblrefseedsrc.strSeedSrc FROM fields LEFT JOIN farmers ON farmers.farmer_id = fields.farmer_id LEFT JOIN gpx_infos ON gpx_infos.gpx_id = fields.gpx_id  LEFT JOIN tblplant ON tblplant.strPlantFarmerId = farmers.farmer_id LEFT JOIN tblrefcom ON tblplant.intPlantComId =  tblrefcom.intComId LEFT JOIN tblrefseedtype ON tblplant.intPlantSeedTypeId LEFT JOIN tblrefseedsrc ON tblrefseedsrc.intSeedSrcID =  tblplant.intPlantSeedSrcId WHERE ")
-    
+    query_string = ("SELECT fields.field_id,fields.farmer_id,farmers.rsbsa_id,fields.field_name,fields.field_size_ha,fields.gpx_id, gpx_infos.area, gpx_infos.center_lat, gpx_infos.center_lng, tblplant.dtmPlantPlanted, tblrefcom.strCom, tblrefseedtype.strSeedType, tblrefseedsrc.strSeedSrc FROM fields LEFT JOIN farmers ON farmers.farmer_id = fields.farmer_id LEFT JOIN gpx_infos ON gpx_infos.gpx_id = fields.gpx_id  LEFT JOIN tblplant ON tblplant.strPlantGpxId = fields.gpx_id LEFT JOIN tblrefcom ON tblplant.intPlantComId =  tblrefcom.intComId LEFT JOIN tblrefseedtype ON tblplant.intPlantSeedTypeId LEFT JOIN tblrefseedsrc ON tblrefseedsrc.intSeedSrcID =  tblplant.intPlantSeedSrcId WHERE ")
     if region:
         condition_string = "farmers.region_id = {}".format(region)
     if province:
@@ -98,7 +99,7 @@ def get_filter_data(region, province, municipality, barangay):
     if barangay:
         condition_string = "farmers.barangay_id = {}".format(barangay)
     full_string = query_string+condition_string
-    print(full_string)
+    #print(full_string)
     cursor.execute(query_string+condition_string)
     rows = cursor.fetchall()
     return rows 
@@ -123,7 +124,7 @@ def get_farmer_data(gpx_id):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database)
     cursor = connection.cursor()
     statement = "Select * from farmers where farmer_id='{}'".format(gpx_id)
-    print(statement)
+    #print(statement)
     cursor.execute("Select * from farmers where farmer_id='{}'".format(gpx_id))
     rows = cursor.fetchall()
     return rows
@@ -140,7 +141,7 @@ def get_all_gpx_info_by_gpx_id_ifarm(gpx_id):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     statement = "Select * from gpx_infos where gpx_id='{}'".format(gpx_id)
-    print(statement)
+    #print(statement)
     cursor.execute(statement)
     #cursor.execute("SELECT * FROM farmers join gpx_infos where farmer_id where gpx_id='{}'".format(gpx_id))
     rows = cursor.fetchall()
@@ -150,7 +151,7 @@ def get_farmer_data_ifarm(farmer_id):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     statement = "Select * from farmers where farmer_id='{}'".format(farmer_id)
-    print(statement)
+    #print(statement)
     cursor.execute(statement)
     rows = cursor.fetchall()
     return rows
@@ -159,6 +160,14 @@ def get_intervention_data_by_gpx_id(gpx_id):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     statement = "SELECT tblrehab.strRehabGpxId, tblrehab.dtmRehabInterview, tblrefcom.strCom, tblrefseedsrc.strSeedSrc, tblrefprog.strProg, tblrefunit.strUnit, tblrehab.decRehabQty, tblrehab.decRehabAmt, tblrefdmg.strDmg, tblrefdmg.dtmDmg FROM tblrehab LEFT JOIN tblrefcom ON tblrehab.intRehabComId = tblrefcom.intComId LEFT JOIN tblrefseedsrc ON tblrehab.intRehabFundSrcId = tblrefseedsrc.intSeedSrcId LEFT JOIN tblrefprog ON tblrehab.intRehabProgActId = tblrefprog.intProgId LEFT JOIN tblrefunit ON tblrehab.intRehabUnitId = tblrefunit.intUnitId LEFT JOIN tblrefdmg ON tblrehab.intRehabDmgId = tblrefdmg.intDmgId WHERE tblrehab.strRehabGpxId = '{}'".format(gpx_id)
+    cursor.execute(statement)
+    rows = cursor.fetchall()
+    return rows
+
+def get_field_history_data_by_gpx_id(gpx_id):
+    connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
+    cursor = connection.cursor()
+    statement = "'{}'".format(gpx_id)
     cursor.execute(statement)
     rows = cursor.fetchall()
     return rows

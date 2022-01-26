@@ -22,7 +22,7 @@ def get_map_markers_by_gpx_id():
 
 @app.route("/get_map_polygon_by_gpx_id_rcm")
 def get_map_polygon_by_gpx_id():
-        rows = con.get_geo_data()
+        rows = con.get_geo_data1()
         dataframe = create_data_frame.create_data_frame(rows)
         map = create_map_polygon.create_map_polygon(dataframe)
         return map._repr_html_()
@@ -52,12 +52,12 @@ def get_all_map_markers_by_gpx_id_ifarm():
 
 @app.route("/get_map_markers_by_gpx_id_iFarm")
 def get_map_markers_by_gpx_id_ifarm():
-        data = request.json
-        try:
-                gpx_id = data.get("gpx_id",None)
-        except:
-                return "<p>No Gpx Id</p>"  
-        rows = con.get_all_gpx_info_by_gpx_id_ifarm(gpx_id)
+        #data = request.json
+        # try:
+        #         gpx_id = data.get("gpx_id",None)
+        # except:
+        #         return "<p>No Gpx Id</p>"  
+        rows = con.get_all_gpx_info_by_gpx_id_ifarm("2314-00771-01")
         dataframe = create_data_frame.create_data_frame_ifarm(rows)
         map = create_map_markers.create_map_marker(dataframe)
         return map._repr_html_()
@@ -104,8 +104,9 @@ def filter_map():
 
 @app.route("/fields/<gpx_id>", methods = ['GET'])
 def fields(gpx_id):
-        data = con.get_intervention_data_by_gpx_id(gpx_id)
-        return render_template("fields.html",data=data,gpx_id=gpx_id)
+        #data = con.get_intervention_data_by_gpx_id(gpx_id)
+        data = con.get_field_history_data_by_gpx_id(gpx_id)
+        return render_template("fields.html",data=data,gpx_id=gpx_id,)
 
 @app.route("/filter_basic_map", methods = ['GET','POST'])
 def filter_basic_map():

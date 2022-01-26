@@ -82,7 +82,7 @@ def add_track_segments(rows):
         folium_polygon = folium.GeoJson(polygon)
         if not details.empty:
             folium.Tooltip(html).add_to(folium_polygon)
-            folium.Popup("<p><a href=/fields/{}>Interventions</a></p>".format(gpx_id)).add_to(folium_polygon)
+            folium.Popup("<p><a href=/fields/{}>Field History</a></p>".format(gpx_id)).add_to(folium_polygon)
         map.add_child(folium_polygon)
 
         # except:
