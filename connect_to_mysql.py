@@ -167,7 +167,7 @@ def get_intervention_data_by_gpx_id(gpx_id):
 def get_field_history_data_by_gpx_id(gpx_id):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
-    statement = "'{}'".format(gpx_id)
+    statement = "SELECT tblplant.dtmPlantPlanted,fields.farmer_id,farmers.rsbsa_id, tblrefcom.strCom, tblrefseedtype.strSeedType, tblrefseedsrc.strSeedSrc, tblharvest.decHarvestAvgYield, tblrefdmg.strDmg, tbldmg.dtmDmgOccurrence, tblrefprog.strProg FROM tblplant LEFT JOIN fields ON fields.gpx_id = tblplant.strPlantGpxId LEFT JOIN farmers ON fields.farmer_id = farmers.farmer_id LEFT JOIN tblrefcom ON tblplant.intPlantComId = tblrefcom.intComId LEFT JOIN tblrefseedtype ON tblplant.intPlantSeedTypeId = tblrefseedtype.intSeedTypeId LEFT JOIN tblrefseedsrc ON tblplant.intPlantSeedSrcId = tblrefseedsrc.intSeedSrcId LEFT JOIN tblharvest ON tblplant.intPlantId = tblharvest.intHarvestPlantId LEFT JOIN tbldmg ON tblplant.intPlantId = tbldmg.intDmgPlantId LEFT JOIN tblrefdmg ON tbldmg.intDmgCauseId = tblrefdmg.intDmgId LEFT JOIN tblrehab ON tblplant.intPlantId = tblrehab.intRehabPlantId LEFT JOIN tblrefprog ON tblrehab.intRehabProgActId = tblrefprog.intProgId WHERE gpx_id = '{}'".format(gpx_id)
     cursor.execute(statement)
     rows = cursor.fetchall()
     return rows

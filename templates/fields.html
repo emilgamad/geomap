@@ -8,7 +8,7 @@
 </head>
     <p>Field History</p>
     <p>Field_ID:{{gpx_id}}</p>
-    <table border="1">
+    <table border="1">    
         <tr>
             <th>Date Planted</th>
             <th>Farmer ID</th>
@@ -17,9 +17,11 @@
             <th>Seed Program</th>
             <th>Seed Source</th>
             <th>Yield</th>
-            <th>Intervention</th>
+            <th>Damage Cause</th>
+            <th>Damage Date</th>
+            <th>Damage Program</th>
         </tr>
-        {%for i in data%}
+        {% for i in data %}
         <tr>
             <td>{{i[0]}}</td>
             <td>{{i[1]}}</td>
@@ -29,8 +31,10 @@
             <td>{{i[5]}}</td>
             <td>{{i[6]}}</td>
             <td>{{i[7]}}</td>
+            <td>{{i[8]}}</td>
+            <td>{{i[9]}}</td>
         </tr>
-        {%endfor%}
+        {% endfor %}
     </table>
 
 <body>
