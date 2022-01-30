@@ -151,7 +151,7 @@ def get_farmer_data_ifarm(farmer_id):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     statement = "Select * from farmers where farmer_id='{}'".format(farmer_id)
-    #print(statement)
+    print(statement)
     cursor.execute(statement)
     rows = cursor.fetchall()
     return rows
@@ -171,3 +171,44 @@ def get_field_history_data_by_gpx_id(gpx_id):
     cursor.execute(statement)
     rows = cursor.fetchall()
     return rows
+
+def get_filter_reports(region, province, municipality, barangay):
+    connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
+    cursor = connection.cursor()
+    query_string = ("""
+    SELECT fields.gpx_id, 
+            tblrefcom.strCom,
+            tblrefvar.strVar,
+            tblrefeco.strEco,
+            tblrefseedtype.strSeedType, 
+            tblplant.decPlantParcelArea, 
+            tblplant.decPlantPlantedArea,
+            tblregion.region,
+            tblprovince.province,
+            tblmunicipality.municipality,
+            tblbarangay.barangay
+    FROM fields LEFT JOIN tblplant ON fields.gpx_id = tblplant.strPlantGpxId 
+                LEFT JOIN tblrefcom ON tblplant.intPlantComId = tblrefcom.intComId 
+                LEFT JOIN tblrefseedtype ON tblrefseedtype.intSeedTypeId = tblplant.intPlantSeedTypeId
+                LEFT JOIN tblrefvar ON tblrefvar.intVarId = tblplant.intPlantVarId
+                LEFT JOIN tblregion ON fields.region_id = tblregion.region_id
+                LEFT JOIN tblprovince ON fields.province_id = tblprovince.province_id
+                LEFT JOIN tblmunicipality ON fields.municipality_id = tblmunicipality.municipality_id
+                LEFT JOIN tblbarangay ON fields.barangay_id = tblbarangay.barangay_id
+                LEFT JOIN tblrefeco ON tblplant.intPlantEcoId = tblrefeco.intEcoId """)   
+    # WHERE """)    
+    if region:
+        condition_string = "fields.region_id = {}".format(region)
+    if province:
+        condition_string = "fields.province_id = {}".format(province)
+    if municipality:
+        condition_string = "fields.municipality_id = {}".format(municipality)
+    if barangay:
+        condition_string = "fields.barangay_id = {}".format(barangay)
+    full_string = query_string+condition_string
+    print(full_string)
+    #cursor.execute(query_string+condition_string)
+    cursor.execute(query_string)
+    rows = cursor.fetchall()
+    data = {'rows':rows,"region":region,'province':province,'municipality':municipality,'barangay':barangay}
+    return data 

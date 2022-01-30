@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify, render_template, request, session
 from flask_wtf import FlaskForm
 from numpy import conj
 from wtforms.fields.choices import SelectField
-import connect_to_mysql as con, create_map_markers, create_data_frame, create_map_polygon
+import connect_to_mysql as con, create_map_markers, create_data_frame, create_map_polygon, create_reports
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -146,6 +146,41 @@ def barangay(municipality):
         print("munic {}".format(municipality))
         return jsonify({'barangay':barangay})
 
+
+@app.route("/reports", methods = ['GET','POST'])
+def filter_reports():
+        form = Form()
+        form.province.choices = []
+        form.municipality.choices = []
+        form.barangay.choices = []
+
+        if request.method == 'POST':
+
+                region = request.form.get('region', None)
+                province = request.form.get('province', None)
+                municipality = request.form.get('municipality', None)
+                barangay = request.form.get('barangay', None)
+
+                session['region'] = region
+                session['province'] = province
+                session['municipality'] = municipality
+                session['barangay'] = barangay
+
+                rows = con.get_filter_reports(region, province, municipality, barangay)
+                if len(rows) == 0:
+                        return "<p>No Data</p>"
+
+                data_frame = create_data_frame.create_report_data_frame(rows['rows'])
+                report = create_reports.graph(
+                        dataframe=data_frame,
+                        region = rows.get("region",None),
+                        province = rows.get("province",None),
+                        municipality = rows.get("municipality",None),
+                        barangay = rows.get("barangay",None) 
+                )
+                #print(report)
+                return render_template("filter_reports.html",graphJSON=report,form=form)
+        return render_template("filter_reports.html",form=form)
 
 
 

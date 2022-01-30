@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>iFarm</title>
+</head>
+<body>
+    <div style="width: 25%; float: left">
+        <form method="POST">
+            {{form.csrf_token}}
+            <p>Region:{{form.region}}</p>
+            <input type="submit">
+        </form>
+        <form method="POST">
+            {{form.csrf_token}}
+            <p>Province:{{form.province}}</p>
+            <input type="submit">
+        </form>
+        <form method="POST">
+            {{form.csrf_token}}
+            <p>Municipality:{{form.municipality}}</p>
+            <input type="submit">
+        </form>
+        <form method="POST">
+            {{form.csrf_token}}
+            <p>Barangay:{{form.barangay}}</p>
+            <input type="submit">
+        </form>
+    </div>
+    <div style="width: 75%; margin: auto;height: 100%;float: right; bottom: 0;">
+        {% include "reports.html" %}
+    </div>
+</body>
+<script>
+    let region_select = document.getElementById('region');
+    let province_select = document.getElementById('province');
+    let municipality_select = document.getElementById('municipality')
+    let barangay_select = document.getElementById('barangay')
+
+    region_select.onchange = function() {
+        region = region_select.value;
+        
+        fetch('/provinces/'+region).then(function(response){
+            response.json().then(function(data){
+                console.log(data)
+                let optionHTML = "";
+                for (let province of data.provinces){
+                    optionHTML += '<option value="'+province[0]+'">' + province[1] +'</option>';
+                }
+                province_select.innerHTML = optionHTML;
+            })
+        })
+    }
+
+    province_select.onchange = function() {
+        province = province_select.value;
+        
+        fetch('/municipalities/'+province).then(function(response){
+            response.json().then(function(data){
+                console.log(data)
+                let optionHTML = "";
+                for (let municipality of data.municipality){
+                    optionHTML += '<option value="'+municipality[0]+'">' + municipality[1] +'</option>';
+                }
+                municipality_select.innerHTML = optionHTML;
+            })
+        })
+    }
+
+    municipality_select.onchange = function() {
+        municipality = municipality_select.value;
+        
+        fetch('/barangays/'+municipality).then(function(response){
+            response.json().then(function(data){
+                console.log(data)
+                let optionHTML = "";
+                for (let barangay of data.barangay){
+                    optionHTML += '<option value="'+barangay[0]+'">' + barangay[1] +'</option>';
+                }
+                barangay_select.innerHTML = optionHTML;
+            })
+        })
+    }    
+</script>
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script type='text/javascript'>
+  var graphs = {{graphJSON | safe}};
+  Plotly.plot('chart',graphs,{});
+  Plotly.plot('chart1',graphs,{})
+  Plotly.plot('chart2',graphs,{})
+  Plotly.plot('chart3',graphs,{})
+
+</script>
+</html>

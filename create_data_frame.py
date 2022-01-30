@@ -160,3 +160,48 @@ def create_filtered_polygon_dataframe(data):
     })
 
     return dataframe
+
+def create_report_data_frame(data):
+    gpx_id = []
+    strCom = []
+    strVar = []
+    strEco = []
+    strSeedType = []
+    decPlantParcelArea = []
+    decPlantPlantedArea = []
+    region = []
+    province = []
+    municipality = []
+    barangay = []
+
+    for i in data:
+        gpx_id.append(i[0])
+        strCom.append(i[1])
+        strVar.append(i[2])
+        strEco.append(i[3])
+        strSeedType.append(i[4])
+        decPlantParcelArea.append(i[5])
+        decPlantPlantedArea.append(i[6])
+        region.append(i[7])
+        province.append(i[8])
+        municipality.append(i[9])
+        barangay.append(i[10])
+
+    dataframe = pd.DataFrame({
+        'gpx_id' : gpx_id,
+        'strCom' : strCom,
+        'strVar' : strVar,
+        'strEco' : strEco,
+        'strSeedType' : strSeedType,
+        'decPlantParcelArea' : decPlantParcelArea,
+        'decPlantPlantedArea' : decPlantPlantedArea,
+        'region' : region,
+        'province' : province,
+        'municipality' : municipality,
+        'barangay' : barangay,
+    })
+
+    return dataframe
+
+        
+
