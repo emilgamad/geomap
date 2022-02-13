@@ -1,0 +1,10 @@
+How to install:
+1. Configure connect_to_mysql.py to change the local server_host, database name, username, and password
+2. Run "pip install -r requirements.txt" to install all API requirements
+3. Run "flask run" to start the API server
+4. Press Ctrl+C to stop the API server
+
+
+URL:
+localhost - This is the map renderer
+localhost/reports - This is where the reports are graphs are generated

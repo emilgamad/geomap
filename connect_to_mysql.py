@@ -167,7 +167,28 @@ def get_intervention_data_by_gpx_id(gpx_id):
 def get_field_history_data_by_gpx_id(gpx_id):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
-    statement = "SELECT tblplant.dtmPlantPlanted,fields.farmer_id,farmers.rsbsa_id, tblrefcom.strCom, tblrefseedtype.strSeedType, tblrefseedsrc.strSeedSrc, tblharvest.decHarvestAvgYield, tblrefdmg.strDmg, tbldmg.dtmDmgOccurrence, tblrefprog.strProg FROM tblplant LEFT JOIN fields ON fields.gpx_id = tblplant.strPlantGpxId LEFT JOIN farmers ON fields.farmer_id = farmers.farmer_id LEFT JOIN tblrefcom ON tblplant.intPlantComId = tblrefcom.intComId LEFT JOIN tblrefseedtype ON tblplant.intPlantSeedTypeId = tblrefseedtype.intSeedTypeId LEFT JOIN tblrefseedsrc ON tblplant.intPlantSeedSrcId = tblrefseedsrc.intSeedSrcId LEFT JOIN tblharvest ON tblplant.intPlantId = tblharvest.intHarvestPlantId LEFT JOIN tbldmg ON tblplant.intPlantId = tbldmg.intDmgPlantId LEFT JOIN tblrefdmg ON tbldmg.intDmgCauseId = tblrefdmg.intDmgId LEFT JOIN tblrehab ON tblplant.intPlantId = tblrehab.intRehabPlantId LEFT JOIN tblrefprog ON tblrehab.intRehabProgActId = tblrefprog.intProgId WHERE gpx_id = '{}'".format(gpx_id)
+    statement = """
+    SELECT tblplant.dtmPlantPlanted,
+	   fields.farmer_id,farmers.rsbsa_id, 
+	   tblrefcom.strCom, 
+	   tblrefseedtype.strSeedType, 
+	   tblrefseedsrc.strSeedSrc, 
+	   tblharvest.decHarvestAvgYield, 
+	   tblrefdmg.strDmg, 
+	   tblrefdmg.dtmDmg, 
+	   tblrefprog.strProg 
+    FROM tblplant LEFT JOIN fields ON fields.gpx_id = tblplant.strPlantGpxId 
+                LEFT JOIN farmers ON fields.farmer_id = farmers.farmer_id 
+                LEFT JOIN tblrefcom ON tblplant.intPlantComId = tblrefcom.intComId 
+                LEFT JOIN tblrefseedtype ON tblplant.intPlantSeedTypeId = tblrefseedtype.intSeedTypeId 
+                LEFT JOIN tblrefseedsrc ON tblplant.intPlantSeedSrcId = tblrefseedsrc.intSeedSrcId 
+                LEFT JOIN tblharvest ON tblplant.intPlantId = tblharvest.intHarvestPlantId 
+                LEFT JOIN tbldmg ON tblplant.intPlantId = tbldmg.intDmgPlantId 
+                LEFT JOIN tblrefdmg ON tbldmg.intDmgCauseId = tblrefdmg.intDmgId 
+                LEFT JOIN tblrehab ON tblplant.intPlantId = tblrehab.intRehabPlantId 
+                LEFT JOIN tblrefprog ON tblrehab.intRehabProgActId = tblrefprog.intProgId 
+    WHERE '{}' ORDER BY `tblrefdmg`.`dtmDmg`  ASC""".format(gpx_id)  
+    #print(statement)  
     cursor.execute(statement)
     rows = cursor.fetchall()
     return rows
@@ -175,7 +196,7 @@ def get_field_history_data_by_gpx_id(gpx_id):
 def get_filter_reports(region, province, municipality, barangay):
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
-    query_string = ("""
+    query_string = """
     SELECT fields.gpx_id, 
             tblrefcom.strCom,
             tblrefvar.strVar,
@@ -195,8 +216,8 @@ def get_filter_reports(region, province, municipality, barangay):
                 LEFT JOIN tblprovince ON fields.province_id = tblprovince.province_id
                 LEFT JOIN tblmunicipality ON fields.municipality_id = tblmunicipality.municipality_id
                 LEFT JOIN tblbarangay ON fields.barangay_id = tblbarangay.barangay_id
-                LEFT JOIN tblrefeco ON tblplant.intPlantEcoId = tblrefeco.intEcoId """)   
-    # WHERE """)    
+                LEFT JOIN tblrefeco ON tblplant.intPlantEcoId = tblrefeco.intEcoId    
+    WHERE """    
     if region:
         condition_string = "fields.region_id = {}".format(region)
     if province:
@@ -208,7 +229,7 @@ def get_filter_reports(region, province, municipality, barangay):
     full_string = query_string+condition_string
     print(full_string)
     #cursor.execute(query_string+condition_string)
-    cursor.execute(query_string)
+    cursor.execute(full_string)
     rows = cursor.fetchall()
     data = {'rows':rows,"region":region,'province':province,'municipality':municipality,'barangay':barangay}
     return data 
