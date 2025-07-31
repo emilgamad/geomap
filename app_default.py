@@ -5,4 +5,10 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-        return "<p>Hello, World!</p>"
+    """
+    Handle the root URL route.
+
+    Returns:
+        str: HTML content displaying a greeting message.
+    """
+    return "<p>Hello, World!</p>"

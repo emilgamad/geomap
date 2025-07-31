@@ -4,6 +4,13 @@ from shapely.geometry import Polygon
 from flask import url_for
 
 def create_map_polygon(dataframe):
+    """
+    Creates a folium map with a polygon from the given DataFrame.
+    Args:
+        dataframe (pd.DataFrame): DataFrame with lat and lon columns.
+    Returns:
+        folium.Map: Map with a polygon overlay.
+    """
 
     coordi = zip(dataframe['lon'],dataframe['lat'],)
     polygon_geom = Polygon(coordi)
@@ -15,6 +22,13 @@ def create_map_polygon(dataframe):
     return map
 
 def create_map_polygons(dataframeList:list): 
+    """
+    Creates a folium map with multiple polygons from a list of DataFrames.
+    Args:
+        dataframeList (list): List of DataFrames, each representing a polygon.
+    Returns:
+        folium.Map: Map with multiple polygons and popups.
+    """
     map = folium.Map(location = [dataframeList[0].iloc[0]['lat'],dataframeList[0].iloc[0]['lon']], tiles='OpenStreetMap', zoom_start = 16)
     
     for i in dataframeList:
@@ -40,6 +54,13 @@ def create_map_polygons(dataframeList:list):
     return map
 
 def add_track_segments(rows):
+    """
+    Adds track segments as polygons to a folium map from the given rows.
+    Args:
+        rows (list): List of tuples containing track segment data.
+    Returns:
+        folium.Map: Map with polygons and popups for each segment.
+    """
     dataframe = create_data_frame.create_filtered_data_frame_ifarm(rows)
     try:
         lat = dataframe.iloc[0]['lat']

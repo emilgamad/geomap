@@ -9,6 +9,11 @@ database3 = "u509806649_ifarm2"
 
 
 def get_region_rcm():
+    """
+    Fetches all regions from the database.
+    Returns:
+        list: List of region tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     cursor.execute("SELECT region_id,region FROM `tblregion`")
@@ -16,6 +21,13 @@ def get_region_rcm():
     return data
 
 def get_province_rcm(region=None):
+    """
+    Fetches all provinces, optionally filtered by region.
+    Args:
+        region (str, optional): Region ID to filter provinces.
+    Returns:
+        list: List of province tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     if region:
@@ -29,6 +41,13 @@ def get_province_rcm(region=None):
     return data
 
 def get_municipality_rcm(province=None):
+    """
+    Fetches all municipalities, optionally filtered by province.
+    Args:
+        province (str, optional): Province ID to filter municipalities.
+    Returns:
+        list: List of municipality tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     if province:
@@ -42,6 +61,13 @@ def get_municipality_rcm(province=None):
     return data
 
 def get_barangay_rcm(municipality=None):
+    """
+    Fetches all barangays, optionally filtered by municipality.
+    Args:
+        municipality (str, optional): Municipality ID to filter barangays.
+    Returns:
+        list: List of barangay tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     if municipality:
@@ -68,6 +94,11 @@ def get_barangay_rcm(municipality=None):
 
 
 def get_geo_data1():
+    """
+    Fetches geo data for a hardcoded GPX ID.
+    Returns:
+        list: List of geo data tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     #connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
@@ -78,6 +109,13 @@ def get_geo_data1():
     return rows
 
 def get_geo_data(gpx_id):
+    """
+    Fetches geo data for a given GPX ID.
+    Args:
+        gpx_id (str): GPX ID to fetch data for.
+    Returns:
+        list: List of geo data tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     statement = "Select * from gpx_track_segments where gpx_id = '{}'".format(gpx_id)
@@ -87,6 +125,13 @@ def get_geo_data(gpx_id):
     return rows
 
 def get_filter_data(region, province, municipality, barangay):
+    """
+    Fetches filtered data based on region, province, municipality, and barangay.
+    Args:
+        region, province, municipality, barangay: Filter parameters.
+    Returns:
+        list: List of filtered data tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     query_string = ("SELECT fields.field_id,fields.farmer_id,farmers.rsbsa_id,fields.field_name,fields.field_size_ha,fields.gpx_id, gpx_infos.area, gpx_infos.center_lat, gpx_infos.center_lng, tblplant.dtmPlantPlanted, tblrefcom.strCom, tblrefseedtype.strSeedType, tblrefseedsrc.strSeedSrc FROM fields LEFT JOIN farmers ON farmers.farmer_id = fields.farmer_id LEFT JOIN gpx_infos ON gpx_infos.gpx_id = fields.gpx_id  LEFT JOIN tblplant ON tblplant.strPlantGpxId = fields.gpx_id LEFT JOIN tblrefcom ON tblplant.intPlantComId =  tblrefcom.intComId LEFT JOIN tblrefseedtype ON tblplant.intPlantSeedTypeId LEFT JOIN tblrefseedsrc ON tblrefseedsrc.intSeedSrcID =  tblplant.intPlantSeedSrcId WHERE ")
@@ -105,6 +150,11 @@ def get_filter_data(region, province, municipality, barangay):
     return rows 
 
 def get_all_geo_data():
+    """
+    Fetches all geo data from the database.
+    Returns:
+        list: List of geo data tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database)
     cursor = connection.cursor()
     cursor.execute("Select * from gpx_track_segments")
@@ -113,6 +163,11 @@ def get_all_geo_data():
     return rows
 
 def get_all_gpx_info():
+    """
+    Fetches all GPX info from the database.
+    Returns:
+        list: List of GPX info tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database)
     cursor = connection.cursor()
     cursor.execute("Select * from gpx_infos")
@@ -121,6 +176,13 @@ def get_all_gpx_info():
     return rows
 
 def get_farmer_data(gpx_id):
+    """
+    Fetches farmer data for a given GPX ID.
+    Args:
+        gpx_id (str): GPX ID to fetch farmer data for.
+    Returns:
+        list: List of farmer data tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database)
     cursor = connection.cursor()
     statement = "Select * from farmers where farmer_id='{}'".format(gpx_id)
@@ -130,6 +192,11 @@ def get_farmer_data(gpx_id):
     return rows
 
 def get_all_gpx_info_ifarm():
+    """
+    Fetches all GPX info from the iFarm database.
+    Returns:
+        list: List of GPX info tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     cursor.execute("Select * from gpx_infos")
@@ -138,6 +205,13 @@ def get_all_gpx_info_ifarm():
     return rows
 
 def get_all_gpx_info_by_gpx_id_ifarm(gpx_id):
+    """
+    Fetches GPX info by GPX ID from the iFarm database.
+    Args:
+        gpx_id (str): GPX ID to fetch info for.
+    Returns:
+        list: List of GPX info tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     statement = "Select * from gpx_infos where gpx_id='{}'".format(gpx_id)
@@ -148,6 +222,13 @@ def get_all_gpx_info_by_gpx_id_ifarm(gpx_id):
     return rows
 
 def get_farmer_data_ifarm(farmer_id):
+    """
+    Fetches farmer data by farmer ID from the iFarm database.
+    Args:
+        farmer_id (str): Farmer ID to fetch data for.
+    Returns:
+        list: List of farmer data tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     statement = "Select * from farmers where farmer_id='{}'".format(farmer_id)
@@ -157,6 +238,13 @@ def get_farmer_data_ifarm(farmer_id):
     return rows
 
 def get_intervention_data_by_gpx_id(gpx_id):
+    """
+    Fetches intervention data by GPX ID from the iFarm database.
+    Args:
+        gpx_id (str): GPX ID to fetch intervention data for.
+    Returns:
+        list: List of intervention data tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     statement = "SELECT tblrehab.strRehabGpxId, tblrehab.dtmRehabInterview, tblrefcom.strCom, tblrefseedsrc.strSeedSrc, tblrefprog.strProg, tblrefunit.strUnit, tblrehab.decRehabQty, tblrehab.decRehabAmt, tblrefdmg.strDmg, tblrefdmg.dtmDmg FROM tblrehab LEFT JOIN tblrefcom ON tblrehab.intRehabComId = tblrefcom.intComId LEFT JOIN tblrefseedsrc ON tblrehab.intRehabFundSrcId = tblrefseedsrc.intSeedSrcId LEFT JOIN tblrefprog ON tblrehab.intRehabProgActId = tblrefprog.intProgId LEFT JOIN tblrefunit ON tblrehab.intRehabUnitId = tblrefunit.intUnitId LEFT JOIN tblrefdmg ON tblrehab.intRehabDmgId = tblrefdmg.intDmgId WHERE tblrehab.strRehabGpxId = '{}'".format(gpx_id)
@@ -165,18 +253,25 @@ def get_intervention_data_by_gpx_id(gpx_id):
     return rows
 
 def get_field_history_data_by_gpx_id(gpx_id):
+    """
+    Fetches field history data by GPX ID from the iFarm database.
+    Args:
+        gpx_id (str): GPX ID to fetch field history for.
+    Returns:
+        list: List of field history data tuples.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     statement = """
     SELECT tblplant.dtmPlantPlanted,
-	   fields.farmer_id,farmers.rsbsa_id, 
-	   tblrefcom.strCom, 
-	   tblrefseedtype.strSeedType, 
-	   tblrefseedsrc.strSeedSrc, 
-	   tblharvest.decHarvestAvgYield, 
-	   tblrefdmg.strDmg, 
-	   tblrefdmg.dtmDmg, 
-	   tblrefprog.strProg 
+       fields.farmer_id,farmers.rsbsa_id, 
+       tblrefcom.strCom, 
+       tblrefseedtype.strSeedType, 
+       tblrefseedsrc.strSeedSrc, 
+       tblharvest.decHarvestAvgYield, 
+       tblrefdmg.strDmg, 
+       tblrefdmg.dtmDmg, 
+       tblrefprog.strProg 
     FROM tblplant LEFT JOIN fields ON fields.gpx_id = tblplant.strPlantGpxId 
                 LEFT JOIN farmers ON fields.farmer_id = farmers.farmer_id 
                 LEFT JOIN tblrefcom ON tblplant.intPlantComId = tblrefcom.intComId 
@@ -194,6 +289,13 @@ def get_field_history_data_by_gpx_id(gpx_id):
     return rows
 
 def get_filter_reports(region, province, municipality, barangay):
+    """
+    Fetches filtered report data based on region, province, municipality, and barangay.
+    Args:
+        region, province, municipality, barangay: Filter parameters.
+    Returns:
+        dict: Dictionary containing report data and filter parameters.
+    """
     connection = pymysql.connect(host=server_host,user=user,passwd=password,database=database3)
     cursor = connection.cursor()
     query_string = """

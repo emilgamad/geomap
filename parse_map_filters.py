@@ -1,7 +1,15 @@
 
 
 class MapFilter:
+    """
+    Class for parsing map filter parameters into SQL queries.
+    """
     def __init__(self,data):
+        """
+        Initialize MapFilter with filter data.
+        Args:
+            data (dict): Dictionary of filter parameters.
+        """
         self.index = data.get('index')
         self.farmer_id=data.get('farmer_id')
         self.region_id=data.get('region_id')
@@ -11,6 +19,11 @@ class MapFilter:
         self.seed_type=data.get('seed_type')
 
     def parse_map_filter(self):
+        """
+        Parse the filter parameters into an SQL query string.
+        Returns:
+            str: SQL query string for filtering map data.
+        """
         initial_query = "Select * from gpx_info where "
         conditions = []
         if self.index:

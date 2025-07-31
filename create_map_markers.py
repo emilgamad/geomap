@@ -3,6 +3,13 @@ from shapely.geometry import Polygon
 
 
 def create_map_marker(dataframe):
+    """
+    Creates a folium map with a marker for each row in the DataFrame.
+    Args:
+        dataframe (pd.DataFrame): DataFrame with lat, lon, and gpx_id columns.
+    Returns:
+        folium.Map: Map with markers.
+    """
 
     map = folium.Map(location = [dataframe.iloc[0]['lat'],dataframe.iloc[0]['lon']], tiles='OpenStreetMap', zoom_start = 18)
 
@@ -16,6 +23,13 @@ def create_map_marker(dataframe):
     return map
 
 def create_map_markers(dataframe):
+    """
+    Creates a folium map with markers and popups for each row in the DataFrame.
+    Args:
+        dataframe (pd.DataFrame): DataFrame with lat, lon, gpx_id, and area columns.
+    Returns:
+        folium.Map: Map with markers and popups.
+    """
     map = folium.Map(location = [dataframe.iloc[0]['lat'],dataframe.iloc[0]['lon']], tiles='OpenStreetMap', zoom_start = 10)
     # add marker one by one on the map
     for i in range(0,len(dataframe)):
@@ -28,6 +42,13 @@ def create_map_markers(dataframe):
     return map
 
 def create_map_markers_ifarm(dataframe):
+    """
+    Creates a folium map with detailed markers for iFarm data.
+    Args:
+        dataframe (pd.DataFrame): DataFrame with iFarm field and farmer info.
+    Returns:
+        folium.Map: Map with detailed markers and popups.
+    """
     try:
         lat = dataframe.iloc[0]['lat']
         long = dataframe.iloc[0]['lon']

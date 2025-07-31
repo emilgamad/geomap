@@ -5,6 +5,14 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 def graph(dataframe,region,province,municipality,barangay):
+    """
+    Generates a Plotly graph comparing parcel and planted area, grouped by the most specific location filter provided.
+    Args:
+        dataframe (pd.DataFrame): DataFrame with report data.
+        region, province, municipality, barangay: Filter parameters.
+    Returns:
+        str: JSON-encoded Plotly graph.
+    """
 
     if region:
         xAxis = 'region'

@@ -2,6 +2,13 @@ from numpy import float64
 import pandas as pd
 
 def create_data_frame(data):
+    """
+    Creates a pandas DataFrame from raw geo data.
+    Args:
+        data (list): List of tuples containing geo data.
+    Returns:
+        pd.DataFrame: DataFrame with columns gpx_id, lon, lat.
+    """
     gpx_id = []
     longitude = []
     latitude = []
@@ -20,6 +27,13 @@ def create_data_frame(data):
     return dataframe
 
 def create_data_frame_ifarm(data):
+    """
+    Creates a pandas DataFrame for iFarm data.
+    Args:
+        data (list): List of tuples containing iFarm data.
+    Returns:
+        pd.DataFrame: DataFrame with columns gpx_id, area, lon, lat, user.
+    """
     gpx_id = []
     longitude = []
     latitude = []
@@ -47,6 +61,13 @@ def create_data_frame_ifarm(data):
 
 
 def create_data_frame_polygon_from_list(data):
+    """
+    Creates a list of DataFrames, each representing a polygon for a unique GPX ID.
+    Args:
+        data (list): List of tuples containing geo data.
+    Returns:
+        list: List of DataFrames, one per unique GPX ID.
+    """
     dataframeList = []
     df = create_data_frame(data)
     gpx_id = set(df['gpx_id'])
@@ -57,6 +78,13 @@ def create_data_frame_polygon_from_list(data):
     return dataframeList
 
 def create_data_frame_for_gpx_info(data):
+    """
+    Creates a DataFrame for GPX info data.
+    Args:
+        data (list): List of tuples containing GPX info.
+    Returns:
+        pd.DataFrame: DataFrame with columns gpx_id, area, lon, lat.
+    """
     gpx_id = []
     longitude = []
     latitude = []
@@ -79,6 +107,13 @@ def create_data_frame_for_gpx_info(data):
 
 
 def create_filtered_data_frame_ifarm(data):
+    """
+    Creates a filtered DataFrame for iFarm data with additional field and farmer info.
+    Args:
+        data (list): List of tuples containing iFarm data.
+    Returns:
+        pd.DataFrame: DataFrame with detailed field and farmer info.
+    """
     gpx_id = []
     longitude = []
     latitude = []
@@ -133,6 +168,13 @@ def create_filtered_data_frame_ifarm(data):
     return dataframe
 
 def create_filtered_polygon_dataframe(data):
+    """
+    Creates a DataFrame for filtered polygon data.
+    Args:
+        data (list): List of tuples containing polygon data.
+    Returns:
+        pd.DataFrame: DataFrame with columns id, gpx_id, lat, lon.
+    """
     id = []
     gpx_id = []
     latitude = []
@@ -162,6 +204,13 @@ def create_filtered_polygon_dataframe(data):
     return dataframe
 
 def create_report_data_frame(data):
+    """
+    Creates a DataFrame for report data.
+    Args:
+        data (list): List of tuples containing report data.
+    Returns:
+        pd.DataFrame: DataFrame with report columns.
+    """
     gpx_id = []
     strCom = []
     strVar = []
